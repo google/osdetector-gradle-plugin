@@ -1,3 +1,40 @@
+apply plugin: 'groovy'
+apply plugin: 'signing'
+apply plugin: 'maven'
+
+group = 'com.google.gradle.plugins'
+version = '0.1.0-SNAPSHOT'
+
+dependencies {
+  compile gradleApi(),
+          localGroovy(),
+          'kr.motd.maven:os-maven-plugin:1.2.3.Final'
+}
+
+repositories {
+  mavenCentral()
+  mavenLocal()
+}
+
 task wrapper(type: Wrapper) {
   gradleVersion = '2.3'
+}
+
+task sourcesJar(type: Jar, dependsOn:classes) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+
+task groovydocJar(type: Jar, dependsOn:groovydoc) {
+  classifier = 'groovydoc'
+  from groovydoc.destinationDir
+}
+
+artifacts {
+  archives sourcesJar,
+           groovydocJar
+}
+
+signing {
+  sign configurations.archives
 }
