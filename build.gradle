@@ -2,7 +2,7 @@ apply plugin: 'groovy'
 apply plugin: 'signing'
 apply plugin: 'maven'
 
-group = 'com.google.gradle.plugins'
+group = 'com.google.gradle'
 version = '0.1.0-SNAPSHOT'
 
 dependencies {
