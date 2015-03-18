@@ -33,7 +33,7 @@ class OsDetector {
 
     @Override
     protected void logProperty(String name, String value) {
-      logger.debug(name + "=" + value);
+      logger.info(name + "=" + value);
     }
 
     Impl() {
