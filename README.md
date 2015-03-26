@@ -10,7 +10,7 @@ Not available on any repository yet. You have to download the source, build and
 install it locally:
 
 ```
-$ git clone git@github.com:zhangkun83/osdetector-gradle-plugin.git
+$ git clone git@github.com:google/osdetector-gradle-plugin.git
 $ cd osdetector-gradle-plugin
 $ ./gradlew install
 ```
