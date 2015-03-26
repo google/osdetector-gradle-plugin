@@ -37,7 +37,7 @@ can access the normalized OS name (``osdetector.os``), architecture
 ```groovy
 artifacts {
   archives(artifactFile) {
-  classifier osdetector.classifier
+    classifier osdetector.classifier
     type "exe"
     extension "exe"
     builtBy buildArtifact
