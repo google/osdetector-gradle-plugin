@@ -6,14 +6,8 @@ It uses [os-maven-plugin](https://github.com/trustin/os-maven-plugin) under the
 hood thus produces the same result.
 
 ## Latest version
-Not available on any repository yet. You have to download the source, build and
-install it locally:
-
-```
-$ git clone git@github.com:google/osdetector-gradle-plugin.git
-$ cd osdetector-gradle-plugin
-$ ./gradlew install
-```
+The latest version ``1.2.0`` is available on Maven Central.
+Its output is identical to ``os-maven-plugin:1.2.3.Final``.
 
 ## Usage
 To use this plugin, include in your build script:
@@ -23,10 +17,9 @@ apply plugin: 'osdetector'
 buildcript {
   repositories {
     mavenCentral()
-    mavenLocal()
   }
   dependencies {
-    classpath 'com.google.gradle:osdetector-gradle-plugin:0.1.0-SNAPSHOT'
+    classpath 'com.google.gradle:osdetector-gradle-plugin:1.2.0'
   }
 }
 ```
@@ -43,4 +36,11 @@ artifacts {
     builtBy buildArtifact
   }
 }
+```
+
+## To build and install locally
+```
+$ git clone git@github.com:google/osdetector-gradle-plugin.git
+$ cd osdetector-gradle-plugin
+$ ./gradlew install
 ```
