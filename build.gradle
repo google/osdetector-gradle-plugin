@@ -6,9 +6,8 @@ description = 'A Gradle plugin that detects the OS name and architecture, provid
  classifier to be used in the names of native artifacts.'
 group = 'com.google.gradle'
 
-// This version always use the Maven plugin's version as prefix.
-// The last number is used to indicate any fix on the Gradle side.
-version = '1.2.3.Final.1-SNAPSHOT'
+// The major and minor versions are aligned with the Maven plugin's.
+version = '1.2.0-SNAPSHOT'
 
 dependencies {
   compile gradleApi(),
