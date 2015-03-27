@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 
-class OsDetector {
+public class OsDetector {
   private static final Logger logger = LoggerFactory.getLogger(OsDetector.class.getName());
 
   private static final Impl impl = new Impl();
