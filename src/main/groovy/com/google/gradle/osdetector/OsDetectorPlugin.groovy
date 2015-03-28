@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.google.gradle.plugins.osdetector
+package com.google.gradle.osdetector
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
