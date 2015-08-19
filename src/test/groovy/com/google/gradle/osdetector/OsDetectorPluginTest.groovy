@@ -20,6 +20,7 @@ import org.gradle.api.Project
 import org.junit.Test
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertNotNull
+import static org.junit.Assert.fail
 
 class OsDetectorPluginTest {
   @Test
@@ -31,5 +32,16 @@ class OsDetectorPluginTest {
     assertNotNull(project.osdetector.arch)
     assertEquals(project.osdetector.os + '-' + project.osdetector.arch,
         project.osdetector.classifier)
+    System.err.println('classifier=' + project.osdetector.classifier)
+    if (project.osdetector.os == 'linux') {
+      assertNotNull(project.osdetector.release.id)
+      assertNotNull(project.osdetector.release.version)
+      System.err.println('release.id=' + project.osdetector.release.id)
+      System.err.println('release.version=' + project.osdetector.release.version)
+      System.err.println('release.isLike(debian)=' + project.osdetector.release.isLike('debian'))
+      System.err.println('release.isLike(redhat)=' + project.osdetector.release.isLike('redhat'))
+    } else if (project.osdetector.release) {
+      fail("Should be null")
+    }
   }
 }

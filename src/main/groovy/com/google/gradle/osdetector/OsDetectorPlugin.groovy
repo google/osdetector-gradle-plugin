@@ -20,12 +20,6 @@ import org.gradle.api.Project
 
 class OsDetectorPlugin implements Plugin<Project> {
   void apply(final Project project) {
-    project.extensions.create('osdetector', OsDetectorExtension)
+    project.extensions.create('osdetector', OsDetector)
   }
-}
-
-class OsDetectorExtension {
-  def String os = OsDetector.os()
-  def String arch = OsDetector.arch()
-  def String classifier = OsDetector.classifier()
 }

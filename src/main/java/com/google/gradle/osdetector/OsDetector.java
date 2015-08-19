@@ -26,16 +26,52 @@ public class OsDetector {
 
   private static final Impl impl = new Impl();
 
-  static String os() {
+  public String getOs() {
     return (String) impl.detectedProperties.get(Detector.DETECTED_NAME);
   }
 
-  static String arch() {
+  public String getArch() {
     return (String) impl.detectedProperties.get(Detector.DETECTED_ARCH);
   }
 
-  static String classifier() {
+  public String getClassifier() {
     return (String) impl.detectedProperties.get(Detector.DETECTED_CLASSIFIER);
+  }
+
+  public Release getRelease() {
+    Object releaseId = impl.detectedProperties.get(Detector.DETECTED_RELEASE);
+    if (releaseId == null) {
+      return null;
+    }
+    return new Release();
+  }
+
+  /**
+   * Accessor to information about the current OS release.
+   */
+  public static class Release {
+    /**
+     * Returns the release ID.
+     */
+    public String getId() {
+      return (String) impl.detectedProperties.get(Detector.DETECTED_RELEASE);
+    }
+
+    /**
+     * Returns the version ID.
+     */
+    public String getVersion() {
+      return (String) impl.detectedProperties.get(Detector.DETECTED_RELEASE_VERSION);
+    }
+
+    /**
+     * Returns {@code true} if this release is a variant of the given base release (for example,
+     * ubuntu is "like" debian).
+     */
+    public boolean isLike(String baseRelease) {
+      return impl.detectedProperties.containsKey(
+          Detector.DETECTED_RELEASE_LIKE_PREFIX + baseRelease);
+    }
   }
 
   private static class Impl extends Detector {
