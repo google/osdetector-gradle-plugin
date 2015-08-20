@@ -19,7 +19,7 @@ buildcript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.google.gradle:osdetector-gradle-plugin:1.2.1'
+    classpath 'com.google.gradle:osdetector-gradle-plugin:1.3.0'
   }
 }
 ```
