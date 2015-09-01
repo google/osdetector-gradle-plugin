@@ -1,6 +1,7 @@
 apply plugin: 'groovy'
 apply plugin: 'signing'
 apply plugin: 'maven'
+apply plugin: "com.gradle.plugin-publish"
 
 description = 'A Gradle plugin that detects the OS name and architecture, providing a uniform\
  classifier to be used in the names of native artifacts.'
@@ -13,6 +14,17 @@ dependencies {
   compile gradleApi(),
           localGroovy(),
           'kr.motd.maven:os-maven-plugin:1.3.0.Final'
+}
+
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "com.gradle.publish:plugin-publish-plugin:0.9.0"
+  }
 }
 
 repositories {
@@ -106,6 +118,21 @@ uploadArchives.repositories.mavenDeployer {
         organization = 'Google, Inc.'
         organizationUrl 'https://www.google.com'
       }
+    }
+  }
+}
+
+pluginBundle {
+  website = 'https://github.com/google/osdetector-gradle-plugin'
+  vcsUrl = 'https://github.com/google/osdetector-gradle-plugin'
+  description = 'A Gradle plugin that detects the OS name and architecture, ' +
+      'providing a uniform classifier to be used in the names of native artifacts.'
+
+  plugins {
+    protobufPlugin {
+      id = 'com.google.osdetector'
+      displayName = 'OS name and architecture detector'
+      tags = ['os', 'osdetector', 'arch', 'classifier']
     }
   }
 }

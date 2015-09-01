@@ -26,7 +26,7 @@ class OsDetectorPluginTest {
   @Test
   public void pluginAddsExtensionToProject() {
     Project project = ProjectBuilder.builder().build()
-    project.apply plugin: 'osdetector'
+    project.apply plugin: 'com.google.osdetector'
     assertNotNull(project.osdetector)
     assertNotNull(project.osdetector.os)
     assertNotNull(project.osdetector.arch)
