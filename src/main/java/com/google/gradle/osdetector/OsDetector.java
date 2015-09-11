@@ -16,40 +16,66 @@
 package com.google.gradle.osdetector;
 
 import kr.motd.maven.os.Detector;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class OsDetector {
   private static final Logger logger = LoggerFactory.getLogger(OsDetector.class.getName());
 
-  private static final Impl impl = new Impl();
+  private final List<String> classifierWithLikes = new ArrayList<String>();
+  private Impl impl;
 
   public String getOs() {
-    return (String) impl.detectedProperties.get(Detector.DETECTED_NAME);
+    return (String) getImpl().detectedProperties.get(Detector.DETECTED_NAME);
   }
 
   public String getArch() {
-    return (String) impl.detectedProperties.get(Detector.DETECTED_ARCH);
+    return (String) getImpl().detectedProperties.get(Detector.DETECTED_ARCH);
   }
 
   public String getClassifier() {
-    return (String) impl.detectedProperties.get(Detector.DETECTED_CLASSIFIER);
+    return (String) getImpl().detectedProperties.get(Detector.DETECTED_CLASSIFIER);
   }
 
   public Release getRelease() {
+    Impl impl = getImpl();
     Object releaseId = impl.detectedProperties.get(Detector.DETECTED_RELEASE);
     if (releaseId == null) {
       return null;
     }
-    return new Release();
+    return new Release(impl);
+  }
+
+  public synchronized void setClassifierWithLikes(List<String> classifierWithLikes) {
+    if (impl != null) {
+      throw new IllegalStateException("classifierWithLikes must be set before osdetector is read.");
+    }
+    this.classifierWithLikes.clear();
+    this.classifierWithLikes.addAll(classifierWithLikes);
+  }
+
+  private synchronized Impl getImpl() {
+    if (impl == null) {
+      impl = new Impl(classifierWithLikes);
+    }
+    return impl;
   }
 
   /**
    * Accessor to information about the current OS release.
    */
   public static class Release {
+    private final Impl impl;
+
+    private Release(Impl impl) {
+      this.impl = impl;
+    }
+
     /**
      * Returns the release ID.
      */
@@ -87,8 +113,8 @@ public class OsDetector {
       logger.info(name + "=" + value);
     }
 
-    Impl() {
-      detect(detectedProperties);
+    Impl(List<String> classifierWithLikes) {
+      detect(detectedProperties, classifierWithLikes);
     }
   }
 }

@@ -44,4 +44,19 @@ class OsDetectorPluginTest {
       fail("Should be null")
     }
   }
+
+  @Test
+  public void setClassifierWithLikes() {
+    Project project = ProjectBuilder.builder().build()
+    project.apply plugin: 'com.google.osdetector'
+    project.osdetector.classifierWithLikes = ['debian', 'fedora']
+    assertNotNull(project.osdetector.os)
+    assertNotNull(project.osdetector.arch)
+    System.err.println('classifier=' + project.osdetector.classifier)
+    try {
+      project.osdetector.classifierWithLikes = ['debian']
+      fail("Should throw IllegalStateException")
+    } catch (IllegalStateException expected) {
+    }
+  }
 }
