@@ -13,7 +13,7 @@ version = '1.3.2-SNAPSHOT'
 dependencies {
   compile gradleApi(),
           localGroovy(),
-          'kr.motd.maven:os-maven-plugin:1.3.0.Final'
+          'kr.motd.maven:os-maven-plugin:1.4.0.Final'
 }
 
 buildscript {
