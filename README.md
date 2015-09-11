@@ -6,8 +6,8 @@ It uses [os-maven-plugin](https://github.com/trustin/os-maven-plugin) under the
 hood thus produces the same result.
 
 ## Latest version
-The latest version ``1.3.1`` is available on Maven Central.
-Its output is identical to ``os-maven-plugin:1.3.0.Final``.
+The latest version ``1.4.0`` is available on Maven Central.
+Its output is identical to ``os-maven-plugin:1.4.0.Final``.
 
 ## Usage
 To use this plugin, include in your build script:
@@ -19,7 +19,7 @@ buildcript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.google.gradle:osdetector-gradle-plugin:1.3.1'
+    classpath 'com.google.gradle:osdetector-gradle-plugin:1.4.0'
   }
 }
 ```
