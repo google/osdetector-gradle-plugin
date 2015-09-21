@@ -8,12 +8,12 @@ description = 'A Gradle plugin that detects the OS name and architecture, provid
 group = 'com.google.gradle'
 
 // The major and minor versions are aligned with the Maven plugin's.
-version = '1.4.0'
+version = '1.4.1-SNAPSHOT'
 
 dependencies {
   compile gradleApi(),
           localGroovy(),
-          'kr.motd.maven:os-maven-plugin:1.4.0.Final'
+          'kr.motd.maven:os-maven-plugin:1.4.1.Final'
 }
 
 buildscript {
