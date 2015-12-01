@@ -14,7 +14,7 @@ To use this plugin, include in your build script:
 ```groovy
 apply plugin: 'com.google.osdetector'
 
-buildcript {
+buildscript {
   repositories {
     mavenCentral()
   }
