@@ -10,7 +10,16 @@ The latest version ``1.4.0`` is available on Maven Central.
 Its output is identical to ``os-maven-plugin:1.4.0.Final``.
 
 ## Usage
-To use this plugin, include in your build script:
+To use this plugin, include in your build script
+
+###For Gradle 2.1 and higher:
+```groovy
+plugins {
+  id "com.google.osdetector" version "1.4.0"
+}
+```
+
+###For Gradle 1.x and 2.0:
 ```groovy
 apply plugin: 'com.google.osdetector'
 
