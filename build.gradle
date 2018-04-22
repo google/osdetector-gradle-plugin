@@ -8,12 +8,14 @@ description = 'A Gradle plugin that detects the OS name and architecture, provid
 group = 'com.google.gradle'
 
 // The major and minor versions are aligned with the Maven plugin's.
-version = '1.4.1-SNAPSHOT'
+version = '1.6.0-SNAPSHOT'
 
 dependencies {
-  compile gradleApi(),
-          localGroovy(),
-          'kr.motd.maven:os-maven-plugin:1.4.1.Final'
+  compile gradleApi(), localGroovy()
+  compile('kr.motd.maven:os-maven-plugin:1.6.0') {
+    exclude group: 'org.apache.maven', module: 'maven-plugin-api'
+    exclude group: 'org.codehaus.plexus', module: 'plexus-utils'
+  }
 }
 
 buildscript {
@@ -49,6 +51,10 @@ task groovydocJar(type: Jar, dependsOn:groovydoc) {
 task javadocJar(type: Jar, dependsOn:javadoc) {
   classifier = 'javadoc'
   from javadoc.destinationDir
+}
+
+tasks.javadoc.options {
+  addBooleanOption('Xdoclint:-missing').value = true
 }
 
 artifacts {
