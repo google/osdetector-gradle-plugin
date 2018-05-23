@@ -74,49 +74,52 @@ task checkJavaVersion << {
           "The plugin must be published under Java 1.7 but ${javaVersion} is found")
     }
 }
-uploadArchives.dependsOn checkJavaVersion
 
-uploadArchives.repositories.mavenDeployer {
-  beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+if (rootProject.hasProperty("ossrhUsername") && rootProject.hasProperty("ossrhPassword")) {
+  uploadArchives.dependsOn checkJavaVersion
 
-  repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-    authentication(userName: ossrhUsername, password: ossrhPassword)
+  uploadArchives.repositories.mavenDeployer {
+    beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+    repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+      authentication(userName: ossrhUsername, password: ossrhPassword)
+    }
+
+    snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+      authentication(userName: ossrhUsername, password: ossrhPassword)
+    }
   }
 
-  snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-    authentication(userName: ossrhUsername, password: ossrhPassword)
-  }
-}
-
-[
-  install.repositories.mavenInstaller,
-  uploadArchives.repositories.mavenDeployer,
-]*.pom*.whenConfigured { pom ->
-  pom.project {
-    name "$project.group:$project.name"
-    description project.description
-    url 'https://github.com/google/osdetector-gradle-plugin'
-
-    scm {
-      connection 'scm:svn:https://github.com/google/osdetector-gradle-plugin.git'
-      developerConnection 'scm:svn:git@github.com:google/osdetector-gradle-plugin.git'
+  [
+    install.repositories.mavenInstaller,
+    uploadArchives.repositories.mavenDeployer,
+  ]*.pom*.whenConfigured { pom ->
+    pom.project {
+      name "$project.group:$project.name"
+      description project.description
       url 'https://github.com/google/osdetector-gradle-plugin'
-    }
 
-    licenses {
-      license {
-        name 'Apache License 2.0'
-        url 'http://opensource.org/licenses/Apache-2.0'
-      }
-    }
-
-    developers {
-      developer {
-        name 'Kun Zhang'
-        email 'zhangkun@google.com'
+      scm {
+        connection 'scm:svn:https://github.com/google/osdetector-gradle-plugin.git'
+        developerConnection 'scm:svn:git@github.com:google/osdetector-gradle-plugin.git'
         url 'https://github.com/google/osdetector-gradle-plugin'
-        organization = 'Google, Inc.'
-        organizationUrl 'https://www.google.com'
+      }
+
+      licenses {
+        license {
+          name 'Apache License 2.0'
+          url 'http://opensource.org/licenses/Apache-2.0'
+        }
+      }
+
+      developers {
+        developer {
+          name 'Kun Zhang'
+          email 'zhangkun@google.com'
+          url 'https://github.com/google/osdetector-gradle-plugin'
+          organization = 'Google, Inc.'
+          organizationUrl 'https://www.google.com'
+        }
       }
     }
   }
