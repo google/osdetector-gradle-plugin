@@ -35,7 +35,9 @@ class OsDetectorPluginTest {
     System.err.println('classifier=' + project.osdetector.classifier)
     if (project.osdetector.os == 'linux') {
       assertNotNull(project.osdetector.release.id)
-      assertNotNull(project.osdetector.release.version)
+      if (project.osdetector.release.id != 'arch') {
+        assertNotNull(project.osdetector.release.version)
+      }
       System.err.println('release.id=' + project.osdetector.release.id)
       System.err.println('release.version=' + project.osdetector.release.version)
       System.err.println('release.isLike(debian)=' + project.osdetector.release.isLike('debian'))
