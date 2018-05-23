@@ -1,7 +1,7 @@
 language: java
 
 jdk:
-  - oraclejdk8
+  - openjdk7
 
 script:
   - ./gradlew clean assemble test --stacktrace
