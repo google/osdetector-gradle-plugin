@@ -2,6 +2,7 @@ apply plugin: 'groovy'
 apply plugin: 'signing'
 apply plugin: 'maven'
 apply plugin: "com.gradle.plugin-publish"
+apply plugin: 'java-gradle-plugin'
 
 description = 'A Gradle plugin that detects the OS name and architecture, providing a uniform\
  classifier to be used in the names of native artifacts.'
@@ -12,6 +13,7 @@ version = '1.6.1-SNAPSHOT'
 
 ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 ext.javaVersion = JavaVersion.current()
+ext.pluginId = 'com.google.osdetector'
 
 dependencies {
   compile gradleApi(), localGroovy()
@@ -19,6 +21,7 @@ dependencies {
     exclude group: 'org.apache.maven', module: 'maven-plugin-api'
     exclude group: 'org.codehaus.plexus', module: 'plexus-utils'
   }
+  testCompile 'junit:junit:4.12'
 }
 
 buildscript {
@@ -28,17 +31,13 @@ buildscript {
     }
   }
   dependencies {
-    classpath "com.gradle.publish:plugin-publish-plugin:0.9.0"
+    classpath "com.gradle.publish:plugin-publish-plugin:0.10.0"
   }
 }
 
 repositories {
   mavenCentral()
   mavenLocal()
-}
-
-task wrapper(type: Wrapper) {
-  gradleVersion = '2.3'
 }
 
 task sourcesJar(type: Jar, dependsOn:classes) {
@@ -57,10 +56,7 @@ task javadocJar(type: Jar, dependsOn:javadoc) {
 }
 
 tasks.javadoc.options {
-  if (!javaVersion.isJava7()) {
-    // This option is not necessary and doesn't exist in JDK 7
-    addBooleanOption('Xdoclint:-missing').value = true
-  }
+  addBooleanOption('Xdoclint:-missing').value = true
 }
 
 artifacts {
@@ -77,17 +73,16 @@ if (!gradle.startParameter.taskNames.intersect(['publishPlugins'])) {
   }
 }
 
-targetCompatibility = 1.6
-sourceCompatibility = 1.6
-// Releases must be built on Java 1.7 to make sure backward compatibility.
-// targetCompatibility may not be enough because Gradle may use Java APIs that
-// are not available on older Java versions.
-// See https://github.com/grpc/grpc-java/issues/805
-task checkJavaVersion << {
-    if (!javaVersion.isJava7()) {
+targetCompatibility = 1.8
+sourceCompatibility = 1.8
+// Releases must be built on Java 1.8
+task checkJavaVersion {
+  doLast {
+    if (!javaVersion.isJava8()) {
       throw new GradleException(
-          "The plugin must be published under Java 1.7 but ${javaVersion} is found")
+          "The plugin must be published under Java 1.8 but ${javaVersion} is found")
     }
+  }
 }
 
 if (rootProject.hasProperty("ossrhUsername") && rootProject.hasProperty("ossrhPassword")) {
@@ -140,6 +135,15 @@ if (rootProject.hasProperty("ossrhUsername") && rootProject.hasProperty("ossrhPa
   }
 }
 
+gradlePlugin {
+  plugins {
+    osDetectorPlugin {
+      id = pluginId
+      implementationClass = 'com.google.gradle.osdetector.OsDetectorPlugin'
+    }
+  }
+}
+
 pluginBundle {
   website = 'https://github.com/google/osdetector-gradle-plugin'
   vcsUrl = 'https://github.com/google/osdetector-gradle-plugin'
@@ -147,8 +151,8 @@ pluginBundle {
       'providing a uniform classifier to be used in the names of native artifacts.'
 
   plugins {
-    protobufPlugin {
-      id = 'com.google.osdetector'
+    osDetectorPlugin {
+      id = pluginId
       displayName = 'OS name and architecture detector'
       tags = ['os', 'osdetector', 'arch', 'classifier']
     }
