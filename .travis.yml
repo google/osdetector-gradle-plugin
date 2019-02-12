@@ -4,7 +4,7 @@ jdk:
   - oraclejdk8
 
 script:
-  - ./gradlew clean assemble test --stacktrace
+  - ./gradlew clean assemble test --stacktrace --scan
 
 notifications:
   email: false

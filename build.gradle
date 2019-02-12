@@ -1,8 +1,16 @@
-apply plugin: 'groovy'
-apply plugin: 'signing'
-apply plugin: 'maven'
-apply plugin: "com.gradle.plugin-publish"
-apply plugin: 'java-gradle-plugin'
+plugins {
+    id 'com.gradle.build-scan' version '2.1'
+    id 'com.gradle.plugin-publish' version '0.10.0'
+    id 'groovy'
+    id 'signing'
+    id 'maven'
+    id 'java-gradle-plugin'
+}
+
+buildScan {
+    termsOfServiceUrl   = 'https://gradle.com/terms-of-service'
+    termsOfServiceAgree = 'yes'
+}
 
 description = 'A Gradle plugin that detects the OS name and architecture, providing a uniform\
  classifier to be used in the names of native artifacts.'
@@ -22,17 +30,6 @@ dependencies {
     exclude group: 'org.codehaus.plexus', module: 'plexus-utils'
   }
   testCompile 'junit:junit:4.12'
-}
-
-buildscript {
-  repositories {
-    maven {
-      url "https://plugins.gradle.org/m2/"
-    }
-  }
-  dependencies {
-    classpath "com.gradle.publish:plugin-publish-plugin:0.10.0"
-  }
 }
 
 repositories {
