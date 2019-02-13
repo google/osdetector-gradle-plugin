@@ -8,8 +8,8 @@ plugins {
 }
 
 buildScan {
-    termsOfServiceUrl   = 'https://gradle.com/terms-of-service'
-    termsOfServiceAgree = 'yes'
+    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+    apply from: 'gradle/build-scans.gradle'
 }
 
 description = 'A Gradle plugin that detects the OS name and architecture, providing a uniform\
