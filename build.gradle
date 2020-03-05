@@ -78,7 +78,7 @@ sourceCompatibility = 1.8
 // Releases must be built on Java 1.8
 task checkJavaVersion {
   doLast {
-    if (!javaVersion.isJava8()) {
+    if (!javaVersion.java8Compatible) {
       throw new GradleException(
           "The plugin must be published under Java 1.8 but ${javaVersion} is found")
     }
