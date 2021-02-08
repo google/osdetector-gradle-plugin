@@ -17,7 +17,7 @@ ext.pluginId = 'com.google.osdetector'
 
 dependencies {
   compile gradleApi(), localGroovy()
-  compile('kr.motd.maven:os-maven-plugin:1.6.2') {
+  compile('kr.motd.maven:os-maven-plugin:1.7.0') {
     exclude group: 'org.apache.maven', module: 'maven-plugin-api'
     exclude group: 'org.codehaus.plexus', module: 'plexus-utils'
   }
