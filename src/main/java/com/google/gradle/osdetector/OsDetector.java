@@ -15,8 +15,20 @@
  */
 package com.google.gradle.osdetector;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.inject.Inject;
 import kr.motd.maven.os.Detector;
 
+import kr.motd.maven.os.FileOperationProvider;
+import kr.motd.maven.os.SystemPropertyOperationProvider;
+import org.gradle.api.Project;
+import org.gradle.api.file.ProjectLayout;
+import org.gradle.api.file.RegularFile;
+import org.gradle.api.provider.ProviderFactory;
+import org.gradle.util.VersionNumber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,11 +36,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class OsDetector {
+public abstract class OsDetector {
   private static final Logger logger = LoggerFactory.getLogger(OsDetector.class.getName());
 
+  @Inject
+  public abstract ProviderFactory getProviderFactory();
+  @Inject
+  public abstract ProjectLayout getProjectLayout();
+  private final Project project;
   private final List<String> classifierWithLikes = new ArrayList<String>();
   private Impl impl;
+
+  public OsDetector(Project project) {
+    this.project = project;
+  }
 
   public String getOs() {
     return (String) getImpl().detectedProperties.get(Detector.DETECTED_NAME);
@@ -61,9 +82,19 @@ public class OsDetector {
 
   private synchronized Impl getImpl() {
     if (impl == null) {
-      impl = new Impl(classifierWithLikes);
+      if (compareGradleVersion(project, "6.5") >= 0) {
+        impl = new Impl(classifierWithLikes, new ConfigurationTimeSafeSystemPropertyOperations(),
+            new ConfigurationTimeSafeFileOperations());
+      } else {
+        impl = new Impl(classifierWithLikes);
+      }
     }
     return impl;
+  }
+
+  private static int compareGradleVersion(Project project, String target) {
+    return VersionNumber.parse(project.getGradle().getGradleVersion()).compareTo(
+        VersionNumber.parse(target));
   }
 
   /**
@@ -101,7 +132,17 @@ public class OsDetector {
   }
 
   private static class Impl extends Detector {
-    final Properties detectedProperties = System.getProperties();
+    final Properties detectedProperties = new Properties();
+
+    Impl(List<String> classifierWithLikes, SystemPropertyOperationProvider sysPropOps,
+        FileOperationProvider fsOps) {
+      super(sysPropOps, fsOps);
+      detect(detectedProperties, classifierWithLikes);
+    }
+
+    Impl(List<String> classifierWithLikes) {
+      detect(detectedProperties, classifierWithLikes);
+    }
 
     @Override
     protected void log(String message) {
@@ -112,9 +153,39 @@ public class OsDetector {
     protected void logProperty(String name, String value) {
       logger.info(name + "=" + value);
     }
+  }
 
-    Impl(List<String> classifierWithLikes) {
-      detect(detectedProperties, classifierWithLikes);
+  /** Provides system property operations compatible with Gradle configuration cache. */
+  private final class ConfigurationTimeSafeSystemPropertyOperations
+      implements SystemPropertyOperationProvider {
+    @Override
+    public String getSystemProperty(String name) {
+      return getProviderFactory().systemProperty(name).forUseAtConfigurationTime().getOrNull();
+    }
+
+    @Override
+    public String getSystemProperty(String name, String def) {
+      return getProviderFactory().systemProperty(name).forUseAtConfigurationTime().getOrElse(def);
+    }
+
+    @Override
+    public String setSystemProperty(String name, String value) {
+      // no-op
+      return null;
+    }
+  }
+
+  /** Provides filesystem operations compatible with Gradle configuration cache. */
+  private final class ConfigurationTimeSafeFileOperations implements FileOperationProvider {
+    @Override
+    public InputStream readFile(String fileName) throws IOException {
+      RegularFile file = getProjectLayout().getProjectDirectory().file(fileName);
+      byte[] bytes = getProviderFactory().fileContents(file).getAsBytes()
+          .forUseAtConfigurationTime().getOrNull();
+      if (bytes == null) {
+        throw new FileNotFoundException(fileName + " not exist");
+      }
+      return new ByteArrayInputStream(bytes);
     }
   }
 }

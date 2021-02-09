@@ -22,7 +22,7 @@ public class OsDetectorPlugin implements Plugin<Project> {
 
   @Override
   public void apply(final Project project) {
-    project.getExtensions().create("osdetector", OsDetector.class);
+    project.getExtensions().create("osdetector", OsDetector.class, project);
   }
 
 }
