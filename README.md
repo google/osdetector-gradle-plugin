@@ -8,8 +8,8 @@ hood thus produces the same result.
 Requires Java 8 or up.
 
 ## Latest version
-The latest version ``1.6.2`` is available on Maven Central.
-Its output is identical to ``os-maven-plugin:1.6.2``.
+The latest version ``1.7.0`` is available on Maven Central.
+Its output is identical to ``os-maven-plugin:1.7.0``.
 
 ## Usage
 To use this plugin, include in your build script
@@ -17,7 +17,7 @@ To use this plugin, include in your build script
 ### For Gradle 2.1 and higher:
 ```groovy
 plugins {
-  id "com.google.osdetector" version "1.6.2"
+  id "com.google.osdetector" version "1.7.0"
 }
 ```
 
@@ -30,7 +30,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.google.gradle:osdetector-gradle-plugin:1.6.2'
+    classpath 'com.google.gradle:osdetector-gradle-plugin:1.7.0'
   }
 }
 ```
