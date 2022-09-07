@@ -28,7 +28,7 @@ import org.gradle.api.Project;
 import org.gradle.api.file.ProjectLayout;
 import org.gradle.api.file.RegularFile;
 import org.gradle.api.provider.ProviderFactory;
-import org.gradle.util.VersionNumber;
+import org.gradle.util.GradleVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,7 +82,7 @@ public abstract class OsDetector {
 
   private synchronized Impl getImpl() {
     if (impl == null) {
-      if (compareGradleVersion(project, "6.5") >= 0) {
+      if (GradleVersion.current().compareTo(GradleVersion.version("6.5")) >= 0) {
         impl = new Impl(classifierWithLikes, new ConfigurationTimeSafeSystemPropertyOperations(),
             new ConfigurationTimeSafeFileOperations());
       } else {
@@ -90,11 +90,6 @@ public abstract class OsDetector {
       }
     }
     return impl;
-  }
-
-  private static int compareGradleVersion(Project project, String target) {
-    return VersionNumber.parse(project.getGradle().getGradleVersion()).compareTo(
-        VersionNumber.parse(target));
   }
 
   /**
