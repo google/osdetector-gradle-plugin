@@ -9,7 +9,7 @@ description = 'A Gradle plugin that detects the OS name and architecture, provid
 group = 'com.google.gradle'
 
 // The major and minor versions are aligned with the Maven plugin's.
-version = '1.7.2'
+version = '1.7.3-SNAPSHOT'
 
 ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 ext.javaVersion = JavaVersion.current()
