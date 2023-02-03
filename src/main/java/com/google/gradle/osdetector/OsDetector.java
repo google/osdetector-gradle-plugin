@@ -21,12 +21,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.inject.Inject;
 import kr.motd.maven.os.Detector;
-
 import kr.motd.maven.os.FileOperationProvider;
 import kr.motd.maven.os.SystemPropertyOperationProvider;
 import org.gradle.api.Project;
 import org.gradle.api.file.ProjectLayout;
 import org.gradle.api.file.RegularFile;
+import org.gradle.api.provider.Provider;
 import org.gradle.api.provider.ProviderFactory;
 import org.gradle.util.GradleVersion;
 import org.slf4j.Logger;
@@ -150,17 +150,26 @@ public abstract class OsDetector {
     }
   }
 
+  private static <T> Provider<T> forUseAtConfigurationTime(Provider<T> provider) {
+    // Deprecated and a noop starting in 7.4
+    if (GradleVersion.current().compareTo(GradleVersion.version("7.4")) < 0) {
+      return provider.forUseAtConfigurationTime();
+    } else {
+      return provider;
+    }
+  }
+
   /** Provides system property operations compatible with Gradle configuration cache. */
   private final class ConfigurationTimeSafeSystemPropertyOperations
       implements SystemPropertyOperationProvider {
     @Override
     public String getSystemProperty(String name) {
-      return getProviderFactory().systemProperty(name).forUseAtConfigurationTime().getOrNull();
+      return forUseAtConfigurationTime(getProviderFactory().systemProperty(name)).getOrNull();
     }
 
     @Override
     public String getSystemProperty(String name, String def) {
-      return getProviderFactory().systemProperty(name).forUseAtConfigurationTime().getOrElse(def);
+      return forUseAtConfigurationTime(getProviderFactory().systemProperty(name)).getOrElse(def);
     }
 
     @Override
@@ -175,8 +184,8 @@ public abstract class OsDetector {
     @Override
     public InputStream readFile(String fileName) throws IOException {
       RegularFile file = getProjectLayout().getProjectDirectory().file(fileName);
-      byte[] bytes = getProviderFactory().fileContents(file).getAsBytes()
-          .forUseAtConfigurationTime().getOrNull();
+      byte[] bytes = forUseAtConfigurationTime(getProviderFactory().fileContents(file).getAsBytes())
+          .getOrNull();
       if (bytes == null) {
         throw new FileNotFoundException(fileName + " not exist");
       }
